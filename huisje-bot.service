@@ -1,0 +1,16 @@
+[Unit]
+Description=Huisje Telegram Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/paperclip/projects/communication
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/paperclip/projects/communication/bot.log
+StandardError=append:/paperclip/projects/communication/bot.log
+
+[Install]
+WantedBy=default.target

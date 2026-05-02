@@ -1,0 +1,18 @@
+[Unit]
+Description=PersonalAssistant Telegram Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/paperclip/projects/communication
+EnvironmentFile=/paperclip/projects/communication/.env
+ExecStart=/usr/bin/node pa-bot.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pa-bot
+
+[Install]
+WantedBy=default.target

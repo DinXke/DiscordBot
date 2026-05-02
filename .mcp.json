@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ms365": {
+      "command": "npx",
+      "args": ["-y", "@softeria/ms-365-mcp-server", "--preset", "personal"],
+      "env": {
+        "MS365_MCP_TOKEN_CACHE_PATH": "/paperclip/projects/communication/.m365/token-cache.json",
+        "MS365_MCP_SELECTED_ACCOUNT_PATH": "/paperclip/projects/communication/.m365/selected-account.json"
+      }
+    }
+  }
+}

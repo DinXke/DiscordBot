@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "ms365"
+  ],
+  "enableAllProjectMcpServers": true
+}

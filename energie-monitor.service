@@ -1,0 +1,17 @@
+[Unit]
+Description=Energie Monitor — negatieve prijsperiode detector voor Discord #energie-advies
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/paperclip/projects/communication
+EnvironmentFile=/paperclip/projects/communication/.env
+ExecStart=/usr/bin/node energie-monitor.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/paperclip/projects/communication/energie-monitor.log
+StandardError=append:/paperclip/projects/communication/energie-monitor.log
+
+[Install]
+WantedBy=default.target

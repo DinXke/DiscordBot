@@ -4,6 +4,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes, EmbedBuilder } = require('discord.js');
 const Anthropic = require('@anthropic-ai/sdk');
 const { executeTool, isPaperclipAvailable, TOOLS } = require('./paperclip-handler');
+const { startNotifier } = require('./paperclip-notifier');
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const CLIENT_ID = '1500218535098449930';
@@ -151,12 +152,16 @@ client.once('ready', async () => {
   } else {
     await registerCommands().catch(console.error);
   }
+  if (isPaperclipAvailable()) startNotifier(client);
 });
 
 async function setupGuildChannels(guild) {
   const existing = await guild.channels.fetch();
-  const hasPaperclip = existing.some(c => c.name === 'paperclip' && c.type === 4);
-  if (hasPaperclip) return;
+  const hasPaperclip = existing.find(c => c && c.name === 'paperclip' && c.type === 4);
+  if (hasPaperclip) {
+    console.log(`Paperclip channels already exist in ${guild.name}, skipping setup`);
+    return;
+  }
 
   const me = await guild.members.fetchMe();
   if (!me.permissions.has('ManageChannels')) {

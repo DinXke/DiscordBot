@@ -157,7 +157,7 @@ client.once('ready', async () => {
 
 async function setupGuildChannels(guild) {
   const existing = await guild.channels.fetch();
-  const hasPaperclip = existing.find(c => c && c.name === 'paperclip' && c.type === 4);
+  const hasPaperclip = existing.find(c => c && c.name?.toLowerCase() === 'paperclip' && c.type === 4);
   if (hasPaperclip) {
     console.log(`Paperclip channels already exist in ${guild.name}, skipping setup`);
     return;

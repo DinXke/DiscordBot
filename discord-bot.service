@@ -1,0 +1,16 @@
+[Unit]
+Description=Discord Paperclip Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/paperclip/projects/communication
+ExecStart=/usr/bin/node discord-bot.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/paperclip/projects/communication/discord-bot.log
+StandardError=append:/paperclip/projects/communication/discord-bot.log
+
+[Install]
+WantedBy=default.target

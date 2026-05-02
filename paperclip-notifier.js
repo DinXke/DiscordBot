@@ -14,7 +14,8 @@ const PRIORITY_EMOJI = { critical: '🔴', high: '🟠', medium: '🟡', low: '�
 const ALERT_STATUSES = new Set(['blocked', 'cancelled']);
 
 function initDb() {
-  const db = new Database(path.join(__dirname, 'notifier.db'));
+  const db = new Database(path.join(__dirname, 'notifier.db'), { timeout: 5000 });
+  db.pragma('journal_mode = WAL');
   db.exec(`
     CREATE TABLE IF NOT EXISTS seen_comments (
       comment_id TEXT PRIMARY KEY,

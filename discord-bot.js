@@ -146,15 +146,56 @@ client.once('ready', async () => {
   if (guilds.length > 0) {
     for (const guild of guilds) {
       await registerCommands(guild.id).catch(console.error);
+      await setupGuildChannels(guild).catch(console.error);
     }
   } else {
     await registerCommands().catch(console.error);
   }
 });
 
+async function setupGuildChannels(guild) {
+  const existing = await guild.channels.fetch();
+  const hasPaperclip = existing.some(c => c.name === 'paperclip' && c.type === 4);
+  if (hasPaperclip) return;
+
+  const me = await guild.members.fetchMe();
+  if (!me.permissions.has('ManageChannels')) {
+    console.log(`No MANAGE_CHANNELS in ${guild.name}, skipping channel setup`);
+    return;
+  }
+
+  const category = await guild.channels.create({ name: 'Paperclip', type: 4, position: 1 });
+
+  const channels = [
+    { name: 'commando-s', topic: 'Gebruik slash commands: /issues /issue /dashboard /comment /create /paperclip' },
+    { name: 'updates', topic: 'Automatische Paperclip issue-updates' },
+    { name: 'alerts', topic: 'Kritieke en geblokkeerde issues' },
+  ];
+
+  for (const ch of channels) {
+    await guild.channels.create({ name: ch.name, type: 0, parent: category.id, topic: ch.topic });
+  }
+
+  console.log(`Set up Paperclip channels in ${guild.name}`);
+  const commandChannel = existing.find(c => c.name === 'commando-s' || c.name === 'algemeen');
+  if (commandChannel) {
+    await commandChannel.send(
+      '**Paperclip bot is klaar!** 🚀\n\n' +
+      'Beschikbare commando\'s:\n' +
+      '• `/issues` — toon open issues\n' +
+      '• `/issue <id>` — details van een issue\n' +
+      '• `/dashboard` — Paperclip overzicht\n' +
+      '• `/comment <id> <tekst>` — reageer op een issue\n' +
+      '• `/create <titel>` — nieuw issue aanmaken\n' +
+      '• `/paperclip <vraag>` — AI-assistent voor Paperclip'
+    ).catch(() => {});
+  }
+}
+
 client.on('guildCreate', async (guild) => {
   console.log(`Joined guild: ${guild.name} (${guild.id})`);
   await registerCommands(guild.id).catch(console.error);
+  await setupGuildChannels(guild).catch(console.error);
 });
 
 client.on('interactionCreate', async (interaction) => {

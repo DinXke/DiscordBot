@@ -1,3 +1,8 @@
 .env
 node_modules/
 messages.db
+*.db
+*.log
+*.pid
+.m365/token-cache.json
+.m365/selected-account.json
